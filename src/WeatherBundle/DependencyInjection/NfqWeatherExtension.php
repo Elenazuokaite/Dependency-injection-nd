@@ -7,6 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Nfq\WeatherBundle\WeatherProviderInterface;
+use Symfony\Component\DependencyInjection\Reference;
 
 class NfqWeatherExtension extends Extension
 {
@@ -19,5 +20,18 @@ class NfqWeatherExtension extends Extension
         $loader->load('providers.yaml');
 
         $container->setAlias(WeatherProviderInterface::class, 'nfq_weather.provider.openweathermap');
+
+        if (isset($config['providers']['openweathermap']['api_key'])) {
+            $container->getDefinition('nfq_weather.provider.openweathermap')
+            ->replaceArgument(0, $config['providers']['openweathermap']['api_key']);
+        }
+        if (isset($config['providers']['delegating']['providers'])) {
+            $providers = [];
+            foreach($config['providers']['delegating']['providers'] as $provider) {
+                $providers[] = new Reference('nfq_weather.provider.' . $provider);
+            }
+            $container->getDefinition('nfq_weather.provider.delegating')->replaceArgument(0, $providers);
+        }
+
     }
 }

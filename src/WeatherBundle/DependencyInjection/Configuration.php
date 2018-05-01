@@ -12,9 +12,33 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('nfq_weather');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        $rootNode
+            ->children()
+                ->scalarNode('provider')
+                    ->defaultValue('delegating')
+                ->end()
+                ->arrayNode('providers')
+                    ->children()
+                        ->arrayNode('openweathermap')
+                            ->children()
+                                ->scalarNode('api_key')
+                                    ->defaultValue('secretapikey')
+                                    ->isRequired()
+                                ->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('delegating')
+                            ->children()
+                                ->arrayNode('providers')
+                                    ->scalarPrototype()
+                                    ->end()
+                                    ->defaultValue(['yahoo', 'openweathermap'])
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
 
         return $treeBuilder;
     }
