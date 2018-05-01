@@ -15,7 +15,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('provider')
-                    ->defaultValue('delegating')
+                    ->isRequired()
                 ->end()
                 ->arrayNode('providers')
                     ->children()
@@ -32,7 +32,7 @@ class Configuration implements ConfigurationInterface
                                 ->arrayNode('providers')
                                     ->scalarPrototype()
                                     ->end()
-                                    ->defaultValue(['yahoo', 'openweathermap'])
+                                    ->isRequired()
                                 ->end()
                             ->end()
                         ->end()
