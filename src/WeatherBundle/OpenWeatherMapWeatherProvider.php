@@ -16,7 +16,6 @@ class OpenWeatherMapWeatherProvider implements WeatherProviderInterface
      */
     public function fetch(Location $location): Weather
     {
-        // TODO: Implement this
         $response = file_get_contents("http://api.openweathermap.org/data/2.5/weather?lat=".$location->getLat()."&lon=".$location->getLon()."&units=metric&appid=".$this->apiKey);
         $deals = json_decode($response, true);
         $temp = $deals["main"]["temp"];
@@ -24,6 +23,5 @@ class OpenWeatherMapWeatherProvider implements WeatherProviderInterface
         throw new WeatherProviderException('Unexpected unserialized result from OpenWeatherMapWeatherProvider');
     }
     return  new Weather($temp);
-       // return new Weather(24.1);
     }
 }
